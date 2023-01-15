@@ -11,6 +11,8 @@
 		E43C898729747DEB00FA6205 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C898629747DEB00FA6205 /* ViewController.swift */; };
 		E43C898929747DEC00FA6205 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E43C898829747DEC00FA6205 /* Assets.xcassets */; };
 		E43C898C29747DEC00FA6205 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E43C898A29747DEC00FA6205 /* Main.storyboard */; };
+		E43C899429747E2100FA6205 /* MathRoutines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C899329747E2100FA6205 /* MathRoutines.swift */; };
+		E43C89962974B45300FA6205 /* Array_Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C89952974B45300FA6205 /* Array_Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +22,8 @@
 		E43C898829747DEC00FA6205 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E43C898B29747DEC00FA6205 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E43C898D29747DEC00FA6205 /* SIMD_Accelerate_Matrix_Math.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SIMD_Accelerate_Matrix_Math.entitlements; sourceTree = "<group>"; };
+		E43C899329747E2100FA6205 /* MathRoutines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathRoutines.swift; sourceTree = "<group>"; };
+		E43C89952974B45300FA6205 /* Array_Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array_Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +58,8 @@
 			children = (
 				E43C898429747DEB00FA6205 /* AppDelegate.swift */,
 				E43C898629747DEB00FA6205 /* ViewController.swift */,
+				E43C899329747E2100FA6205 /* MathRoutines.swift */,
+				E43C89952974B45300FA6205 /* Array_Extensions.swift */,
 				E43C898829747DEC00FA6205 /* Assets.xcassets */,
 				E43C898A29747DEC00FA6205 /* Main.storyboard */,
 				E43C898D29747DEC00FA6205 /* SIMD_Accelerate_Matrix_Math.entitlements */,
@@ -132,7 +138,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E43C898729747DEB00FA6205 /* ViewController.swift in Sources */,
+				E43C899429747E2100FA6205 /* MathRoutines.swift in Sources */,
 				E43C898529747DEB00FA6205 /* AppDelegate.swift in Sources */,
+				E43C89962974B45300FA6205 /* Array_Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

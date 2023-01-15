@@ -14,7 +14,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
-		// Insert code here to initialize your application
+		// FIXME -- Testing matrix math here -- no UI, remove
+		determinant2x2Test()
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
