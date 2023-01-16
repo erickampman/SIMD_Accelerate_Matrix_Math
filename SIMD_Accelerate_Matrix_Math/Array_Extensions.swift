@@ -10,23 +10,30 @@ import Accelerate
 
 // simd supports incompletely defined array values, but for now I'm only allowing completely defined
 // (even if diagonal, symmetric, etc.)
-extension Array {
+// Also appears we need to restrict ourselves to Float arrays (Extensions now support generics!!! ???)
+extension Array<Float> {
 	
-	// returns 0 if not square
+	// returns 0 if not square.
+	// Not a complete check ... e.g.
+	// a 32x2 matrix has 64 elements, but is not square
 	func getSquareArrayColumnCount() -> UInt {
 		guard isUIntSquare(UInt(self.count)) else { return 0 }
 		return UInt(sqrt(Double(self.count)))
 	}
 
 	// Indices are column first, which makes my brain hurt
-	func getValueOfColumnArray(row: UInt, column: UInt) -> Element? {
-		let cols = getSquareArrayColumnCount()
-		if (0 == cols) { return nil }		// not square
+	func getFloatValueOfColumnArray(row: UInt, column: UInt) -> Float? {
+		let rows = getSquareArrayColumnCount() // square so rows == cols
+		if (0 == rows) { return nil }		// not square
 		
-		let index = column * cols + row
+		let index = column * rows + row
 		guard index < count else { return nil }
 		
-		return self[Int(index)]
+		let val: Float = self[Int(index)]
+		
+		print("row(\(row)) col(\(column)) -> val(\(val))")
+		return val
+//		return Float()
 	}
 
 	/* no point in generic because looks like larger simd arrays are always Float ... ?*/
@@ -36,14 +43,16 @@ extension Array {
 			return nil
 		}
 		
-		guard let r2c2 = self.getValueOfColumnArray(row: startRow+1, column: startColumn+1) as? Float,
-			  let r2c1 = self.getValueOfColumnArray(row: startRow+1, column: startColumn) as? Float,
-			  let r1c2 = self.getValueOfColumnArray(row: startRow, column: startColumn+1) as? Float,
-			  let r1c1 = self.getValueOfColumnArray(row: startRow, column: startColumn) as? Float
+		let test = self.getFloatValueOfColumnArray(row: startRow+1, column: startColumn+1)
+		print("\(test.self)")
+		
+		guard let r2c2 = self.getFloatValueOfColumnArray(row: startRow+1, column: startColumn+1),
+			  let r2c1 = self.getFloatValueOfColumnArray(row: startRow+1, column: startColumn),
+			  let r1c2 = self.getFloatValueOfColumnArray(row: startRow, column: startColumn+1),
+			  let r1c1 = self.getFloatValueOfColumnArray(row: startRow, column: startColumn)
 		else {
 			return nil
 		}
-
 		let col1 = SIMD2<Float>(r1c1,r2c1)
 		let col2 = SIMD2<Float>(r1c2,r2c2)
 
@@ -55,17 +64,17 @@ extension Array {
 			return nil
 		}
 
-		guard let r3c3 = self.getValueOfColumnArray(row: startRow+2, column: startColumn+2) as? Float,
-			  let r3c2 = self.getValueOfColumnArray(row: startRow+2, column: startColumn+1) as? Float,
-			  let r3c1 = self.getValueOfColumnArray(row: startRow+2, column: startColumn) as? Float,
+		guard let r3c3 = self.getFloatValueOfColumnArray(row: startRow+2, column: startColumn+2) as? Float,
+			  let r3c2 = self.getFloatValueOfColumnArray(row: startRow+2, column: startColumn+1) as? Float,
+			  let r3c1 = self.getFloatValueOfColumnArray(row: startRow+2, column: startColumn) as? Float,
 			  
-			  let r2c3 = self.getValueOfColumnArray(row: startRow+1, column: startColumn+2) as? Float,
-			  let r2c2 = self.getValueOfColumnArray(row: startRow+1, column: startColumn+1) as? Float,
-			  let r2c1 = self.getValueOfColumnArray(row: startRow+1, column: startColumn) as? Float,
+			  let r2c3 = self.getFloatValueOfColumnArray(row: startRow+1, column: startColumn+2) as? Float,
+			  let r2c2 = self.getFloatValueOfColumnArray(row: startRow+1, column: startColumn+1) as? Float,
+			  let r2c1 = self.getFloatValueOfColumnArray(row: startRow+1, column: startColumn) as? Float,
 			  
-			  let r1c1 = self.getValueOfColumnArray(row: startRow, column: startColumn+2) as? Float,
-			  let r1c2 = self.getValueOfColumnArray(row: startRow, column: startColumn+1) as? Float,
-			  let r1c3 = self.getValueOfColumnArray(row: startRow, column: startColumn) as? Float
+			  let r1c1 = self.getFloatValueOfColumnArray(row: startRow, column: startColumn+2) as? Float,
+			  let r1c2 = self.getFloatValueOfColumnArray(row: startRow, column: startColumn+1) as? Float,
+			  let r1c3 = self.getFloatValueOfColumnArray(row: startRow, column: startColumn) as? Float
 		else {
 			return nil
 		}
@@ -82,25 +91,25 @@ extension Array {
 			return nil
 		}
 
-		guard let r4c4 = self.getValueOfColumnArray(row: startRow+3, column: startColumn+3) as? Float,
-			  let r4c3 = self.getValueOfColumnArray(row: startRow+3, column: startColumn+2) as? Float,
-			  let r4c2 = self.getValueOfColumnArray(row: startRow+3, column: startColumn+1) as? Float,
-			  let r4c1 = self.getValueOfColumnArray(row: startRow+3, column: startColumn) as? Float,
+		guard let r4c4 = self.getFloatValueOfColumnArray(row: startRow+3, column: startColumn+3) as? Float,
+			  let r4c3 = self.getFloatValueOfColumnArray(row: startRow+3, column: startColumn+2) as? Float,
+			  let r4c2 = self.getFloatValueOfColumnArray(row: startRow+3, column: startColumn+1) as? Float,
+			  let r4c1 = self.getFloatValueOfColumnArray(row: startRow+3, column: startColumn) as? Float,
 			  
-			  let r3c4 = self.getValueOfColumnArray(row: startRow+2, column: startColumn+3) as? Float,
-			  let r3c3 = self.getValueOfColumnArray(row: startRow+2, column: startColumn+2) as? Float,
-			  let r3c2 = self.getValueOfColumnArray(row: startRow+2, column: startColumn+1) as? Float,
-			  let r3c1 = self.getValueOfColumnArray(row: startRow+2, column: startColumn) as? Float,
+			  let r3c4 = self.getFloatValueOfColumnArray(row: startRow+2, column: startColumn+3) as? Float,
+			  let r3c3 = self.getFloatValueOfColumnArray(row: startRow+2, column: startColumn+2) as? Float,
+			  let r3c2 = self.getFloatValueOfColumnArray(row: startRow+2, column: startColumn+1) as? Float,
+			  let r3c1 = self.getFloatValueOfColumnArray(row: startRow+2, column: startColumn) as? Float,
 			  
-			  let r2c4 = self.getValueOfColumnArray(row: startRow+1, column: startColumn+3) as? Float,
-			  let r2c3 = self.getValueOfColumnArray(row: startRow+1, column: startColumn+2) as? Float,
-			  let r2c2 = self.getValueOfColumnArray(row: startRow+1, column: startColumn+1) as? Float,
-			  let r2c1 = self.getValueOfColumnArray(row: startRow+1, column: startColumn) as? Float,
+			  let r2c4 = self.getFloatValueOfColumnArray(row: startRow+1, column: startColumn+3) as? Float,
+			  let r2c3 = self.getFloatValueOfColumnArray(row: startRow+1, column: startColumn+2) as? Float,
+			  let r2c2 = self.getFloatValueOfColumnArray(row: startRow+1, column: startColumn+1) as? Float,
+			  let r2c1 = self.getFloatValueOfColumnArray(row: startRow+1, column: startColumn) as? Float,
 			  
-			  let r1c4 = self.getValueOfColumnArray(row: startRow, column: startColumn+3) as? Float,
-			  let r1c3 = self.getValueOfColumnArray(row: startRow, column: startColumn+2) as? Float,
-			  let r1c2 = self.getValueOfColumnArray(row: startRow, column: startColumn+1) as? Float,
-			  let r1c1 = self.getValueOfColumnArray(row: startRow, column: startColumn) as? Float
+			  let r1c4 = self.getFloatValueOfColumnArray(row: startRow, column: startColumn+3) as? Float,
+			  let r1c3 = self.getFloatValueOfColumnArray(row: startRow, column: startColumn+2) as? Float,
+			  let r1c2 = self.getFloatValueOfColumnArray(row: startRow, column: startColumn+1) as? Float,
+			  let r1c1 = self.getFloatValueOfColumnArray(row: startRow, column: startColumn) as? Float
 		else {
 			return nil
 		}
@@ -118,10 +127,11 @@ extension Array {
 		if 0 == cols { return nil }
 		var ret = [Float]()
 		for c in 0..<cols {
+			if c == column { continue }
 			for r in 0..<cols {  // square matrix
 				if r == row { continue }
 				// FIXME -- this could be optimized substantially by not calling getValueOfColumnArray
-				guard let val = getValueOfColumnArray(row: r, column: c) as? Float else { return nil }
+				guard let val = getFloatValueOfColumnArray(row: r, column: c) as? Float else { return nil }
 				ret.append(val)
 			}
 		}
@@ -137,28 +147,30 @@ extension Array {
 		if 0 == cols { return nil }
 		switch (cols) {
 		case 1:
-			return (first as! Float)
+			return (first!)
 		case 2:   // do the same as 3x3, 4x4?
-			let a = get2x2FromSquareArray(startRow: 0, startColumn: 0)!
-			return a.determinant
+			/* TEMP Test */
+			let tl = first!
+			let br = last!
+			let tr = self[2]
+			let bl = self[1]
 
-//			let tl = first as! Float
-//			let br = last as! Float
-//			let tr = self[2] as! Float
-//			let bl = self[1] as! Float
-//
-//			let majorDiag = tl * br as Float
-//			let minorDiag = tr * bl as Float
-//
-//			return majorDiag - minorDiag
+			let majorDiag = tl * br
+			let minorDiag = tr * bl
+
+			return majorDiag - minorDiag
+			
+//			let a = get2x2FromSquareArray(startRow: 0, startColumn: 0)!
+//			return a.determinant
+/*
 		case 3:
 			let a = get3x3FromSquareArray(startRow: 0, startColumn: 0)!
 			return a.determinant
-		
+
 		case 4:
 			let a = get4x4FromSquareArray(startRow: 0, startColumn: 0)!
 			return a.determinant
-
+*/
 		default:
 			var s = cofactorSignForTopLeftOfArray()
 			var det = Float(0);
