@@ -9,6 +9,14 @@ import Foundation
 import simd
 import Accelerate
 
+enum Sign: Float {
+	case pos = 1.0
+	case neg = -1.0
+	
+	func nextSign() -> Sign {
+		return self == .pos ? .neg : .pos
+	}
+}
 
 func determinant2x2Test() {
 	let r1 = SIMD2<Float>([1,2])
