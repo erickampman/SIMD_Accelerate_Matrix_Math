@@ -19,7 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //		determinant2x2Test2()
 //		determinant3x3Test()
 		determinant4x4Test()
-//		determinant5x5Test()
+		determinant5x5Test()
 //		det3x3More()
 	}
 

@@ -195,11 +195,9 @@ extension Array<Float> {
 		case 3:
 			let a = get3x3FromSquareArray(startRow: 0, startColumn: 0)!
 			return a.determinant
-/* temp
 		case 4:
 			let a = get4x4FromSquareArray(startRow: 0, startColumn: 0)!
 			return a.determinant
-*/
 		default:
 			var s = cofactorSignForTopLeftOfArray()
 			var det = Float(0);

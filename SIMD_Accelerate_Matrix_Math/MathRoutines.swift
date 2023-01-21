@@ -160,7 +160,7 @@ func det3x3More() {
 
 func determinant5x5Test()
 {
-	// Have the answer: -34.0 from Schaum
+	// Have the answer: -24.0 via python
 	
 	// columns!
 	let a: FloatArray = [ 6, 2, 1, 3, -1,
@@ -170,7 +170,7 @@ func determinant5x5Test()
 						  5, 1, 3, -1, 2]
 	
 	let d = a.determinantOfColumnArray()!
-	print("5x5 determinant: \(d)")   // currently incorrect!
+	print("5x5 determinant: \(d)")
 }
 
 /* probably good enough for the sizes of matrices I will be using, but ...*/
