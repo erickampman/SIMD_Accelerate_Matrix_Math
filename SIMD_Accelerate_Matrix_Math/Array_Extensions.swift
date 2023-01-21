@@ -31,7 +31,7 @@ extension Array<Float> {
 		
 		let val: Float = self[Int(index)]
 		
-		print("row(\(row)) col(\(column)) -> val(\(val))")
+//		print("row(\(row)) col(\(column)) -> val(\(val))")
 		return val
 //		return Float()
 	}
@@ -59,22 +59,47 @@ extension Array<Float> {
 		return simd_float2x2(columns: (col1, col2))
 	}
 	
+	func debugPrint3x3ColumnArray() {
+		if 3 != getSquareArrayColumnCount() { return }
+		let startRow = UInt(0)
+		let startColumn = UInt(0)
+		guard let r1c3 = self.getFloatValueOfColumnArray(row: startRow, column: startColumn+2),
+			  let r1c2 = self.getFloatValueOfColumnArray(row: startRow, column: startColumn+1),
+			  let r1c1 = self.getFloatValueOfColumnArray(row: startRow, column: startColumn),
+
+			  let r2c3 = self.getFloatValueOfColumnArray(row: startRow+1, column: startColumn+2),
+			  let r2c2 = self.getFloatValueOfColumnArray(row: startRow+1, column: startColumn+1),
+			  let r2c1 = self.getFloatValueOfColumnArray(row: startRow+1, column: startColumn),
+			
+			  let r3c3 = self.getFloatValueOfColumnArray(row: startRow+2, column: startColumn+2),
+			  let r3c2 = self.getFloatValueOfColumnArray(row: startRow+2, column: startColumn+1),
+			  let r3c1 = self.getFloatValueOfColumnArray(row: startRow+2, column: startColumn)
+		else {
+			return
+		}
+		
+		print("[ \(r1c1) \(r1c2) \(r1c3) ")
+		print("  \(r2c1) \(r2c2) \(r2c3) ")
+		print("  \(r3c1) \(r3c2) \(r3c3) ]")
+	}
+	
 	func get3x3FromSquareArray(startRow: UInt, startColumn: UInt) -> simd_float3x3? {
 		if (!isUIntSquare(UInt(count))) {
 			return nil
 		}
 
-		guard let r3c3 = self.getFloatValueOfColumnArray(row: startRow+2, column: startColumn+2) as? Float,
-			  let r3c2 = self.getFloatValueOfColumnArray(row: startRow+2, column: startColumn+1) as? Float,
-			  let r3c1 = self.getFloatValueOfColumnArray(row: startRow+2, column: startColumn) as? Float,
+		guard let r1c3 = self.getFloatValueOfColumnArray(row: startRow, column: startColumn+2),
+			  let r1c2 = self.getFloatValueOfColumnArray(row: startRow, column: startColumn+1),
+			  let r1c1 = self.getFloatValueOfColumnArray(row: startRow, column: startColumn),
+
+			  let r2c3 = self.getFloatValueOfColumnArray(row: startRow+1, column: startColumn+2),
+			  let r2c2 = self.getFloatValueOfColumnArray(row: startRow+1, column: startColumn+1),
+			  let r2c1 = self.getFloatValueOfColumnArray(row: startRow+1, column: startColumn),
+			
+			  let r3c3 = self.getFloatValueOfColumnArray(row: startRow+2, column: startColumn+2),
+			  let r3c2 = self.getFloatValueOfColumnArray(row: startRow+2, column: startColumn+1),
+			  let r3c1 = self.getFloatValueOfColumnArray(row: startRow+2, column: startColumn)
 			  
-			  let r2c3 = self.getFloatValueOfColumnArray(row: startRow+1, column: startColumn+2) as? Float,
-			  let r2c2 = self.getFloatValueOfColumnArray(row: startRow+1, column: startColumn+1) as? Float,
-			  let r2c1 = self.getFloatValueOfColumnArray(row: startRow+1, column: startColumn) as? Float,
-			  
-			  let r1c1 = self.getFloatValueOfColumnArray(row: startRow, column: startColumn+2) as? Float,
-			  let r1c2 = self.getFloatValueOfColumnArray(row: startRow, column: startColumn+1) as? Float,
-			  let r1c3 = self.getFloatValueOfColumnArray(row: startRow, column: startColumn) as? Float
 		else {
 			return nil
 		}
@@ -138,8 +163,9 @@ extension Array<Float> {
 		return ret
 	}
 	
+	// had this wrong
 	func cofactorSignForTopLeftOfArray() -> Sign {
-		return 0 == count % 2 ? .neg : .pos
+		return .pos
 	}
 	
 	func determinantOfColumnArray() -> Float? {
@@ -149,7 +175,9 @@ extension Array<Float> {
 		case 1:
 			return (first!)
 		case 2:   // do the same as 3x3, 4x4?
-			/* TEMP Test */
+
+			// TEMP Test
+#if true
 			let tl = first!
 			let br = last!
 			let tr = self[2]
@@ -159,14 +187,15 @@ extension Array<Float> {
 			let minorDiag = tr * bl
 
 			return majorDiag - minorDiag
+#else
+			let a = get2x2FromSquareArray(startRow: 0, startColumn: 0)!
+			return a.determinant
+#endif
 			
-//			let a = get2x2FromSquareArray(startRow: 0, startColumn: 0)!
-//			return a.determinant
-/*
 		case 3:
 			let a = get3x3FromSquareArray(startRow: 0, startColumn: 0)!
 			return a.determinant
-
+/* temp
 		case 4:
 			let a = get4x4FromSquareArray(startRow: 0, startColumn: 0)!
 			return a.determinant
@@ -175,8 +204,10 @@ extension Array<Float> {
 			var s = cofactorSignForTopLeftOfArray()
 			var det = Float(0);
 			for col in 0..<cols {
-				let cofactor = cofactorOfColumnArrayForRow(0, column: col)!  // pretty sure we've preflighted sufficiently
-				det += s.rawValue * cofactor.determinantOfColumnArray()!
+				let cofactor = cofactorOfColumnArrayForRow(0, column: col)!  // pretty sure we've preflighted sufficiently=
+				let val = getFloatValueOfColumnArray(row: 0, column: col)!
+				let cdet = cofactor.determinantOfColumnArray()!
+				det += s.rawValue * val * cdet
 				s = s.nextSign()
 			}
 			return det

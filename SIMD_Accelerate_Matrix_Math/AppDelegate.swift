@@ -17,9 +17,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		// FIXME -- Testing matrix math here -- no UI, remove
 //		determinant2x2Test()
 //		determinant2x2Test2()
-		determinant3x3Test()
+//		determinant3x3Test()
 		determinant4x4Test()
-		determinant5x5Test()
+//		determinant5x5Test()
+//		det3x3More()
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
